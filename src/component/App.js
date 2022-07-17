@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import Section from "./Section/Section";
 import FeedbackOptions from "./FeedbackOptions/FeedbackOptions";
 import Statistics from "./Statistics/Statistics ";
@@ -11,27 +11,23 @@ export const App = () => {
   const [bad, setBad] = useState(0);
 
   const addFeedbackGood = () => {
-    setGood(state=> state + 1);
+    setGood((state) => state + 1);
   };
   const addFeedbackNeutral = () => {
-    setNeutral(state => state + 1);
+    setNeutral((state) => state + 1);
   };
   const addFeedbackBad = () => {
-    setBad(state => state + 1);
+    setBad((state) => state + 1);
   };
 
-  useEffect(() => {
-    const countTotalFeedback = good + neutral + bad;
-    document.title = `total = ${countTotalFeedback}`;
-  }, [good, neutral, bad]);
+  const countTotalFeedback = () => {
+    return good + neutral + bad;
+  };
 
-  useEffect(() => {
-    const countPositiveFeedbackPercentage =
-      (good + neutral + bad)
-        ? Math.floor((good * 100) / (good + neutral + bad))
-        : 0;
-    document.title = `positivePercentage = ${countPositiveFeedbackPercentage}`;
-  }, [good, neutral, bad]);
+  const countPositiveFeedbackPercentage = () =>
+    countTotalFeedback()
+      ? Math.floor((good * 100) / countTotalFeedback())
+      : 0;
 
   return (
     <Wrapper>
@@ -45,13 +41,13 @@ export const App = () => {
       />
 
       <Section title="Statistic">
-        {(good + neutral + bad) ? (
+        {countTotalFeedback() ? (
           <Statistics
             good={good}
             neutral={neutral}
             bad={bad}
-            total={good + neutral + bad}
-            positivePercentage={Math.floor((good * 100) / (good + neutral + bad))}
+            total={countTotalFeedback()}
+            positivePercentage={countPositiveFeedbackPercentage()}
           />
         ) : (
           <Notification message="There is no feedback" />
